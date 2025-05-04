@@ -28,6 +28,7 @@ const formSchema = z.object({
   address: z.string().min(5, "Address must be at least 5 characters"),
   instructions: z.string().optional(),
   paymentMethod: z.enum(["cash_on_delivery", "jazzcash", "easypaisa"]),
+  paymentPhone: z.string().regex(/^03\d{2}-\d{7}$/, "Mobile wallet number must be in format 03XX-XXXXXXX").optional(),
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -240,8 +241,20 @@ const Checkout = () => {
                                   <RadioGroupItem value="jazzcash" id="jazzcash" className="h-5 w-5" />
                                 </FormControl>
                                 <FormLabel htmlFor="jazzcash" className="flex items-center cursor-pointer">
-                                  <span className="mr-2">💳</span>
-                                  <span>JazzCash/EasyPaisa</span>
+                                  <span className="mr-2" style={{ color: '#900' }}>📱</span>
+                                  <span>JazzCash</span>
+                                </FormLabel>
+                              </FormItem>
+                            </div>
+                            
+                            <div className="flex items-center p-3 border border-gray-300 rounded-lg">
+                              <FormItem className="flex items-center space-x-3 space-y-0">
+                                <FormControl>
+                                  <RadioGroupItem value="easypaisa" id="easypaisa" className="h-5 w-5" />
+                                </FormControl>
+                                <FormLabel htmlFor="easypaisa" className="flex items-center cursor-pointer">
+                                  <span className="mr-2" style={{ color: '#198a19' }}>📱</span>
+                                  <span>EasyPaisa</span>
                                 </FormLabel>
                               </FormItem>
                             </div>
@@ -288,7 +301,7 @@ const Checkout = () => {
                         <p className="text-gray-500 text-sm">Rs. {item.product.price} each</p>
                       </div>
                     </div>
-                    <p className="font-medium">Rs. {item.product.price * item.quantity}</p>
+                    <p className="font-medium">Rs. {parseFloat(item.product.price.toString()) * item.quantity}</p>
                   </div>
                 ))}
               </div>
