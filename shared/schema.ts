@@ -93,6 +93,7 @@ export const orders = pgTable("orders", {
   instructions: text("instructions"),
   status: text("status").notNull().default("pending"),
   paymentMethod: text("payment_method").notNull(),
+  paymentPhone: text("payment_phone"), // Mobile wallet number for JazzCash/EasyPaisa
   subtotal: decimal("subtotal", { precision: 10, scale: 2 }).notNull(),
   deliveryFee: decimal("delivery_fee", { precision: 10, scale: 2 }).notNull(),
   total: decimal("total", { precision: 10, scale: 2 }).notNull(),
@@ -115,6 +116,7 @@ export const insertOrderSchema = createInsertSchema(orders).pick({
   instructions: true,
   status: true,
   paymentMethod: true,
+  paymentPhone: true,
   subtotal: true,
   deliveryFee: true,
   total: true,
