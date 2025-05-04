@@ -55,7 +55,7 @@ const Home = () => {
       <Navbar />
       <Cart />
       
-      <main className="container mx-auto px-4 py-4 pb-20 md:pb-4">
+      <main className="container mx-auto px-4 py-6 pb-20 md:pb-6 max-w-7xl">
         {/* View Mode Selector */}
         <div className="flex items-center justify-end space-x-2 mb-4">
           <Label htmlFor="view-mode" className={viewMode === "parent" ? "font-bold" : ""}>Parents</Label>
@@ -127,9 +127,9 @@ const Home = () => {
         </section>
 
         {/* Categories */}
-        <section className="py-4">
-          <h2 className="text-2xl font-heading font-bold mb-4">Categories</h2>
-          <div className="categories flex gap-3 overflow-x-auto pb-2 no-scrollbar">
+        <section className="py-6 mt-2">
+          <h2 className="text-2xl font-heading font-bold mb-5">Categories</h2>
+          <div className="categories flex gap-4 overflow-x-auto pb-3 no-scrollbar">
             {categories.map((category) => (
               <CategoryPill
                 key={category.id}
@@ -142,8 +142,8 @@ const Home = () => {
         </section>
 
         {/* Featured Products */}
-        <section className="py-4">
-          <div className="flex justify-between items-center mb-4">
+        <section className="py-6 mt-2">
+          <div className="flex justify-between items-center mb-5">
             <h2 className="text-2xl font-heading font-bold">Sabse Popular 🔥</h2>
             <Button 
               variant="link" 
@@ -154,7 +154,7 @@ const Home = () => {
             </Button>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {popularProducts.length > 0 ? (
               popularProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
@@ -205,15 +205,19 @@ const Home = () => {
         </section>
 
         {/* Recently Added */}
-        <section className="py-4">
-          <div className="flex justify-between items-center mb-4">
+        <section className="py-6 mt-2">
+          <div className="flex justify-between items-center mb-5">
             <h2 className="text-2xl font-heading font-bold">Naye Snacks 🆕</h2>
-            <Button variant="link" className="text-secondary font-medium">
+            <Button 
+              variant="link" 
+              className="text-secondary font-medium"
+              onClick={() => setSelectedCategory(null)}
+            >
               View All
             </Button>
           </div>
           
-          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
+          <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-5">
             {newProducts.length > 0 ? (
               newProducts.map((product) => (
                 <ProductCard key={product.id} product={product} />
