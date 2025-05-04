@@ -29,6 +29,15 @@ const formSchema = z.object({
   instructions: z.string().optional(),
   paymentMethod: z.enum(["cash_on_delivery", "jazzcash", "easypaisa"]),
   paymentPhone: z.string().regex(/^03\d{2}-\d{7}$/, "Mobile wallet number must be in format 03XX-XXXXXXX").optional(),
+}).refine((data) => {
+  // Require paymentPhone if payment method is jazzcash or easypaisa
+  if (data.paymentMethod === 'jazzcash' || data.paymentMethod === 'easypaisa') {
+    return !!data.paymentPhone;
+  }
+  return true;
+}, {
+  message: "Mobile wallet number is required for this payment method",
+  path: ["paymentPhone"],
 });
 
 type FormData = z.infer<typeof formSchema>;
@@ -48,8 +57,12 @@ const Checkout = () => {
       address: "",
       instructions: "",
       paymentMethod: "cash_on_delivery",
+      paymentPhone: "",
     },
   });
+  
+  // Watch payment method to show mobile wallet number field conditionally
+  const selectedPaymentMethod = form.watch("paymentMethod");
 
   // If cart is empty and no success, redirect to home
   if (items.length === 0 && !orderSuccess) {
@@ -219,7 +232,13 @@ const Checkout = () => {
                       <FormItem>
                         <FormControl>
                           <RadioGroup
-                            onValueChange={field.onChange}
+                            onValueChange={(value) => {
+                              field.onChange(value);
+                              // Clear payment phone when switching to Cash on Delivery
+                              if (value === 'cash_on_delivery') {
+                                form.setValue('paymentPhone', '');
+                              }
+                            }}
                             defaultValue={field.value}
                             className="space-y-3"
                           >
@@ -264,6 +283,51 @@ const Checkout = () => {
                       </FormItem>
                     )}
                   />
+                  
+                  {/* Payment method specific instructions */}
+                  <div className="mt-3 text-sm text-gray-600 p-3 bg-gray-50 rounded-lg">
+                    {selectedPaymentMethod === "cash_on_delivery" && (
+                      <p>
+                        💵 <strong>Cash on Delivery:</strong> Pay in cash when your order arrives. Make sure to have the exact amount (Rs. {total}) ready.
+                      </p>
+                    )}
+                    {selectedPaymentMethod === "jazzcash" && (
+                      <p>
+                        📱 <strong>JazzCash Payment:</strong> We'll send payment instructions to your JazzCash account when your order is confirmed.
+                      </p>
+                    )}
+                    {selectedPaymentMethod === "easypaisa" && (
+                      <p>
+                        📱 <strong>EasyPaisa Payment:</strong> We'll send payment instructions to your EasyPaisa account when your order is confirmed.
+                      </p>
+                    )}
+                  </div>
+                  
+                  {/* Mobile Wallet Number - only appears for JazzCash or EasyPaisa */}
+                  {(selectedPaymentMethod === "jazzcash" || selectedPaymentMethod === "easypaisa") && (
+                    <FormField
+                      control={form.control}
+                      name="paymentPhone"
+                      render={({ field }) => (
+                        <FormItem className="mt-4">
+                          <FormLabel>
+                            {selectedPaymentMethod === "jazzcash" ? "JazzCash" : "EasyPaisa"} Account Number
+                          </FormLabel>
+                          <FormControl>
+                            <Input
+                              placeholder="e.g., 03XX-XXXXXXX"
+                              {...field}
+                              className="p-3"
+                            />
+                          </FormControl>
+                          <FormMessage />
+                          <p className="text-sm text-gray-500 mt-1">
+                            Enter the mobile number linked to your {selectedPaymentMethod === "jazzcash" ? "JazzCash" : "EasyPaisa"} account.
+                          </p>
+                        </FormItem>
+                      )}
+                    />
+                  )}
                 </div>
               
                 {/* Mobile Submit Button (visible on mobile only) */}

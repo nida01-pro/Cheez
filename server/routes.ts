@@ -250,7 +250,12 @@ export async function registerRoutes(app: Express): Promise<Server> {
   // Order routes
   app.post("/api/orders", async (req, res) => {
     try {
-      const { name, phone, address, instructions, paymentMethod, items, subtotal, deliveryFee, total } = req.body;
+      const { name, phone, address, instructions, paymentMethod, paymentPhone, items, subtotal, deliveryFee, total } = req.body;
+      
+      // Validate mobile payment methods have a payment phone
+      if ((paymentMethod === 'jazzcash' || paymentMethod === 'easypaisa') && !paymentPhone) {
+        return res.status(400).json({ message: "Mobile wallet number is required for this payment method" });
+      }
       
       // Create order
       const orderData = {
@@ -260,6 +265,7 @@ export async function registerRoutes(app: Express): Promise<Server> {
         address,
         instructions,
         paymentMethod,
+        paymentPhone: paymentPhone || null, // Store mobile wallet number for JazzCash/EasyPaisa
         subtotal,
         deliveryFee,
         total,
