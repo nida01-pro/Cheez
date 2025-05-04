@@ -52,26 +52,44 @@ const Home = () => {
       <Cart />
       
       <main className="container mx-auto px-4 py-4 pb-20 md:pb-4">
+        {/* View Mode Selector */}
+        <div className="flex items-center justify-end space-x-2 mb-4">
+          <Label htmlFor="view-mode" className={viewMode === "parent" ? "font-bold" : ""}>Parents</Label>
+          <Switch 
+            id="view-mode" 
+            checked={viewMode === "kid"}
+            onCheckedChange={(checked) => setViewMode(checked ? "kid" : "parent")}
+          />
+          <Label htmlFor="view-mode" className={viewMode === "kid" ? "font-bold" : ""}>Kids</Label>
+        </div>
+
         {/* Hero Section */}
         <section className="py-4 md:py-8">
-          <div className="bg-gradient-to-r from-primary/10 to-secondary/10 rounded-2xl p-6 md:p-8 text-center md:text-left flex flex-col md:flex-row items-center">
+          <div className={`bg-gradient-to-r ${viewMode === "kid" ? "from-accent/20 to-primary/20" : "from-primary/10 to-secondary/10"} rounded-2xl p-6 md:p-8 text-center md:text-left flex flex-col md:flex-row items-center`}>
             <div className="md:w-1/2">
               <h1 className="text-3xl md:text-4xl font-heading font-bold mb-3">
-                Kia Cheez Khao Gey? 🏡
+                {viewMode === "kid" ? "Maze Ki Cheezein! 🎮" : "Kia Cheez Khao Gey? 🏡"}
               </h1>
               <p className="text-lg mb-6">
-                Ab <strong>biscuits, chips, nimko, chocolate, saari cheez</strong> issi dukan se milegi ghar bethay ek hi din mein! ⏱️
+                {viewMode === "kid" ? (
+                  <>Apni <strong>favorite treats aur masti bhare snacks</strong> ki duniya mein khud ko kho do! 🎪</>
+                ) : (
+                  <>Ab <strong>biscuits, chips, nimko, chocolate, saari cheez</strong> issi dukan se milegi ghar bethay ek hi din mein! ⏱️</>
+                )}
               </p>
               <Button 
-                className="bg-primary text-white font-heading font-bold py-3 px-6 rounded-full text-lg hover:bg-primary/90"
+                className={`${viewMode === "kid" ? "bg-accent text-amber-800" : "bg-primary text-white"} font-heading font-bold py-3 px-6 rounded-full text-lg hover:opacity-90`}
               >
-                Abhi Order Karein! 🚀
+                {viewMode === "kid" ? "Maza Shuru Karo! 🎮" : "Abhi Order Karein! 🚀"}
               </Button>
             </div>
             <div className="md:w-1/2 mt-6 md:mt-0">
               <img 
-                src="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=800&h=600" 
-                alt="Assorted Pakistani snacks and treats" 
+                src={viewMode === "kid" 
+                  ? "https://images.unsplash.com/photo-1558745010-d2a3c21762ab?auto=format&fit=crop&w=800&h=600" 
+                  : "https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=800&h=600"
+                } 
+                alt={viewMode === "kid" ? "Kids enjoying snacks together" : "Assorted Pakistani snacks and treats"} 
                 className="rounded-xl shadow-lg w-full h-auto"
               />
             </div>
@@ -197,22 +215,85 @@ const Home = () => {
           </div>
         </section>
 
-        {/* Testimonials */}
-        <section className="py-6">
-          <h2 className="text-2xl font-heading font-bold mb-4">Parents Ki Pasand ❤️</h2>
-          <div className="bg-white rounded-xl shadow-md p-6">
-            <div className="flex items-center mb-4">
-              <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-xl">👩</div>
-              <div className="ml-3">
-                <h3 className="font-bold">Sana A.</h3>
-                <div className="flex text-amber-400">★★★★★</div>
+        {/* Kid-friendly game or activity section - only visible in kid view */}
+        {viewMode === "kid" && (
+          <section className="py-6 bg-accent/10 rounded-2xl p-6">
+            <h2 className="text-2xl font-heading font-bold mb-4">Fun Activity! 🎮</h2>
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <h3 className="text-xl font-heading font-bold mb-4 text-center">Snack Match Game! 🧩</h3>
+              <p className="text-gray-600 mb-4 text-center">
+                Cheez pe maze karo! Har baar jab snacks order karo, ek nayi game milegi. 
+                Points collect karo aur special treats jeeto!
+              </p>
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-6">
+                <div className="bg-accent/20 rounded-lg h-24 flex items-center justify-center text-4xl cursor-pointer hover:bg-accent/40 transition-colors">
+                  🍫
+                </div>
+                <div className="bg-accent/20 rounded-lg h-24 flex items-center justify-center text-4xl cursor-pointer hover:bg-accent/40 transition-colors">
+                  🍬
+                </div>
+                <div className="bg-accent/20 rounded-lg h-24 flex items-center justify-center text-4xl cursor-pointer hover:bg-accent/40 transition-colors">
+                  🍪
+                </div>
+                <div className="bg-accent/20 rounded-lg h-24 flex items-center justify-center text-4xl cursor-pointer hover:bg-accent/40 transition-colors">
+                  🍿
+                </div>
+              </div>
+              <div className="text-center">
+                <Button className="bg-accent text-amber-800 font-heading font-bold py-2 px-6 rounded-full text-lg">
+                  Khel Shuru Karo!
+                </Button>
               </div>
             </div>
-            <p className="text-gray-600">
-              "My kids absolutely love the after-school snack packs! Delivery is always on time and the variety keeps them excited. Cheez ne meri life asaan bana di hai!"
+          </section>
+        )}
+
+        {/* Testimonials - only visible in parent view */}
+        {viewMode === "parent" && (
+          <section className="py-6">
+            <h2 className="text-2xl font-heading font-bold mb-4">Parents Ki Pasand ❤️</h2>
+            <div className="bg-white rounded-xl shadow-md p-6">
+              <div className="flex items-center mb-4">
+                <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center text-xl">👩</div>
+                <div className="ml-3">
+                  <h3 className="font-bold">Sana A.</h3>
+                  <div className="flex text-amber-400">★★★★★</div>
+                </div>
+              </div>
+              <p className="text-gray-600">
+                "My kids absolutely love the after-school snack packs! Delivery is always on time and the variety keeps them excited. Cheez ne meri life asaan bana di hai!"
+              </p>
+            </div>
+          </section>
+        )}
+
+        {/* Parent-specific nutrition info section - only visible in parent view */}
+        {viewMode === "parent" && (
+          <section className="py-6 bg-secondary/10 rounded-2xl p-6 mb-6">
+            <h2 className="text-2xl font-heading font-bold mb-4">Nutrition Information 📊</h2>
+            <p className="text-gray-600 mb-4">
+              Humari priority hai aapke bachon ki sehat. Har product ke sath detailed nutrition information provide ki jati hai 
+              taki aap informed decisions le sakein.
             </p>
-          </div>
-        </section>
+            <div className="grid md:grid-cols-3 gap-4">
+              <div className="bg-white rounded-xl p-4 text-center">
+                <div className="text-3xl mb-2">🍎</div>
+                <h3 className="font-heading font-bold mb-1">Ingredients</h3>
+                <p className="text-sm text-gray-500">Har product ke ingredients clearly mentioned</p>
+              </div>
+              <div className="bg-white rounded-xl p-4 text-center">
+                <div className="text-3xl mb-2">⚖️</div>
+                <h3 className="font-heading font-bold mb-1">Portion Sizes</h3>
+                <p className="text-sm text-gray-500">Age-appropriate portion sizing ki guidance</p>
+              </div>
+              <div className="bg-white rounded-xl p-4 text-center">
+                <div className="text-3xl mb-2">🔍</div>
+                <h3 className="font-heading font-bold mb-1">Allergen Info</h3>
+                <p className="text-sm text-gray-500">Detailed allergen information har product ke sath</p>
+              </div>
+            </div>
+          </section>
+        )}
       </main>
       
       <MobileNavigation />
