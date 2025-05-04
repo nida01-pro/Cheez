@@ -34,29 +34,30 @@ const ProductCard: React.FC<ProductCardProps> = ({ product }) => {
   };
 
   return (
-    <div className="snack-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition">
-      <div className="h-36 overflow-hidden">
+    <div className="snack-card bg-white rounded-xl shadow-md overflow-hidden hover:shadow-lg transition duration-300 h-full flex flex-col">
+      <div className="relative h-40 overflow-hidden">
         <img 
           src={product.imageUrl} 
           alt={product.name} 
-          className="w-full h-full object-cover"
+          className="w-full h-full object-cover transition-transform duration-300 hover:scale-105"
         />
+        {product.tag && (
+          <Badge 
+            variant="outline" 
+            className={`absolute top-2 right-2 text-xs py-1 px-2 rounded-full ${getBadgeVariant(product.tag)}`}
+          >
+            {product.tag}
+          </Badge>
+        )}
       </div>
-      <div className="p-4">
-        <div className="flex justify-between items-start">
-          <h3 className="font-heading font-bold text-lg">{product.name}</h3>
-          {product.tag && (
-            <Badge variant="outline" className={`text-xs rounded-full ${getBadgeVariant(product.tag)}`}>
-              {product.tag}
-            </Badge>
-          )}
-        </div>
-        <p className="text-gray-500 text-sm mt-1">{product.description}</p>
-        <div className="flex justify-between items-center mt-3">
-          <p className="font-bold">Rs. {product.price}</p>
+      <div className="p-4 flex flex-col flex-grow">
+        <h3 className="font-heading font-bold text-lg line-clamp-1">{product.name}</h3>
+        <p className="text-gray-500 text-sm mt-1 line-clamp-2 mb-3 flex-grow">{product.description}</p>
+        <div className="flex justify-between items-center mt-auto">
+          <p className="font-bold text-lg">Rs. {parseFloat(product.price.toString()).toFixed(0)}</p>
           <Button
             onClick={handleAddToCart}
-            className="bg-primary text-white rounded-full w-8 h-8 flex items-center justify-center hover:bg-primary/90 p-0"
+            className="bg-primary text-white rounded-full w-9 h-9 flex items-center justify-center hover:bg-primary/90 p-0 shadow-sm"
           >
             +
           </Button>

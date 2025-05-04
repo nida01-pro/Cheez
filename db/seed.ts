@@ -180,7 +180,10 @@ async function seed() {
       });
 
       if (!existingProduct) {
-        await db.insert(schema.products).values(product);
+        await db.insert(schema.products).values({
+          ...product,
+          price: product.price.toString(), // Convert number to string for DB
+        });
         console.log(`Product created: ${product.name}`);
       }
     }
