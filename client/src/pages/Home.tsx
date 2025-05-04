@@ -1,5 +1,6 @@
 import { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
+import { useLocation } from "wouter";
 import Navbar from "@/components/Navbar";
 import Cart from "@/components/Cart";
 import ProductCard from "@/components/ProductCard";
@@ -9,6 +10,7 @@ import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import { useCart } from "@/context/CartContext";
 import { Category, Product } from "@shared/schema";
 
 const Home = () => {
@@ -16,6 +18,8 @@ const Home = () => {
   const [searchQuery, setSearchQuery] = useState("");
   const [address, setAddress] = useState("Model Town, Karachi");
   const [viewMode, setViewMode] = useState<"parent" | "kid">("parent");
+  const [, setLocation] = useLocation();
+  const { setIsCartOpen } = useCart();
 
   // Fetch categories
   const { data: categories = [] } = useQuery<Category[]>({
@@ -68,7 +72,7 @@ const Home = () => {
           <div className={`bg-gradient-to-r ${viewMode === "kid" ? "from-accent/20 to-primary/20" : "from-primary/10 to-secondary/10"} rounded-2xl p-6 md:p-8 text-center md:text-left flex flex-col md:flex-row items-center`}>
             <div className="md:w-1/2">
               <h1 className="text-3xl md:text-4xl font-heading font-bold mb-3">
-                {viewMode === "kid" ? "Maze Ki Cheezein! 🎮" : "Kia Cheez Khao Gey? 🏡"}
+                {viewMode === "kid" ? "Maze Ki Cheezein! 🎮" : "Kia Cheez Khao Gey?"}
               </h1>
               <p className="text-lg mb-6">
                 {viewMode === "kid" ? (
@@ -79,6 +83,7 @@ const Home = () => {
               </p>
               <Button 
                 className={`${viewMode === "kid" ? "bg-accent text-amber-800" : "bg-primary text-white"} font-heading font-bold py-3 px-6 rounded-full text-lg hover:opacity-90`}
+                onClick={() => viewMode === "kid" ? setLocation("/games") : setIsCartOpen(true)}
               >
                 {viewMode === "kid" ? "Maza Shuru Karo! 🎮" : "Abhi Order Karein! 🚀"}
               </Button>
@@ -140,7 +145,11 @@ const Home = () => {
         <section className="py-4">
           <div className="flex justify-between items-center mb-4">
             <h2 className="text-2xl font-heading font-bold">Sabse Popular 🔥</h2>
-            <Button variant="link" className="text-secondary font-medium">
+            <Button 
+              variant="link" 
+              className="text-secondary font-medium"
+              onClick={() => setSelectedCategory(null)}
+            >
               View All
             </Button>
           </div>
@@ -171,6 +180,7 @@ const Home = () => {
               <Button 
                 variant="outline" 
                 className="w-full border-2 border-primary text-primary font-heading font-bold py-2 px-4 rounded-full hover:bg-primary/5"
+                onClick={() => setIsCartOpen(true)}
               >
                 Select
               </Button>
@@ -186,6 +196,7 @@ const Home = () => {
               <p className="text-sm text-gray-500 mb-4">Har hafte fresh snacks, no delivery fees, special surprises!</p>
               <Button 
                 className="w-full bg-primary text-white font-heading font-bold py-2 px-4 rounded-full hover:bg-primary/90"
+                onClick={() => setLocation("/subscription")}
               >
                 Subscribe Now!
               </Button>
@@ -240,7 +251,10 @@ const Home = () => {
                 </div>
               </div>
               <div className="text-center">
-                <Button className="bg-accent text-amber-800 font-heading font-bold py-2 px-6 rounded-full text-lg">
+                <Button 
+                  className="bg-accent text-amber-800 font-heading font-bold py-2 px-6 rounded-full text-lg"
+                  onClick={() => setLocation("/games")}
+                >
                   Khel Shuru Karo!
                 </Button>
               </div>
