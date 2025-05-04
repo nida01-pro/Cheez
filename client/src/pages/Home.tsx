@@ -7,12 +7,15 @@ import CategoryPill from "@/components/CategoryPill";
 import MobileNavigation from "@/components/MobileNavigation";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 import { Category, Product } from "@shared/schema";
 
 const Home = () => {
   const [selectedCategory, setSelectedCategory] = useState<number | null>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [address, setAddress] = useState("Model Town, Karachi");
+  const [viewMode, setViewMode] = useState<"parent" | "kid">("parent");
 
   // Fetch categories
   const { data: categories = [] } = useQuery<Category[]>({
@@ -57,7 +60,7 @@ const Home = () => {
                 Kia Cheez Khao Gey? 🏡
               </h1>
               <p className="text-lg mb-6">
-                Ab <strong>crunchy chips, sweet treats, aur homemade maza</strong> – sub kuch same-day delivery! ⏱️
+                Ab <strong>biscuits, chips, nimko, chocolate, saari cheez</strong> issi dukan se milegi ghar bethay ek hi din mein! ⏱️
               </p>
               <Button 
                 className="bg-primary text-white font-heading font-bold py-3 px-6 rounded-full text-lg hover:bg-primary/90"
@@ -67,8 +70,8 @@ const Home = () => {
             </div>
             <div className="md:w-1/2 mt-6 md:mt-0">
               <img 
-                src="https://images.unsplash.com/photo-1600271886742-f049cd451bba?auto=format&fit=crop&w=800&h=600" 
-                alt="Kids enjoying snacks" 
+                src="https://images.unsplash.com/photo-1621939514649-280e2ee25f60?auto=format&fit=crop&w=800&h=600" 
+                alt="Assorted Pakistani snacks and treats" 
                 className="rounded-xl shadow-lg w-full h-auto"
               />
             </div>
