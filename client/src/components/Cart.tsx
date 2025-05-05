@@ -31,7 +31,7 @@ const Cart = () => {
           onClick={() => setIsCartOpen(false)}
         >
           <motion.div 
-            className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-lg"
+            className="absolute right-0 top-0 h-full w-full max-w-md bg-white shadow-lg flex flex-col"
             initial={{ x: "100%" }}
             animate={{ x: 0 }}
             exit={{ x: "100%" }}
@@ -50,7 +50,7 @@ const Cart = () => {
               </Button>
             </div>
             
-            <div className="overflow-auto p-4 h-[calc(100%-180px)]">
+            <div className="overflow-auto p-4 h-[calc(100vh-250px)]">
               {items.length === 0 ? (
                 <div className="flex flex-col items-center justify-center text-center h-full">
                   <div className="text-5xl mb-4">🛒</div>
@@ -105,12 +105,12 @@ const Cart = () => {
               )}
             </div>
             
-            <div className="border-t p-4 bg-gray-50">
+            <div className="border-t p-4 bg-gray-50 mt-auto">
               <div className="flex justify-between mb-2">
                 <span>Subtotal</span>
                 <span className="font-bold">Rs. {subtotal}</span>
               </div>
-              <div className="flex justify-between mb-4">
+              <div className="flex justify-between mb-2">
                 <span>Delivery</span>
                 <span>{deliveryFee === 0 ? "FREE" : `Rs. ${deliveryFee}`}</span>
               </div>
@@ -118,15 +118,21 @@ const Cart = () => {
                 <span>Total</span>
                 <span className="text-primary">Rs. {total}</span>
               </div>
-              <Link href="/checkout">
+              <Link href="/checkout" className="block w-full">
                 <Button 
-                  className="w-full bg-primary text-white font-heading font-bold hover:bg-primary/90"
+                  className="w-full bg-primary text-white font-heading font-bold py-3 px-4 rounded-full text-lg hover:bg-primary/90"
                   disabled={items.length === 0}
                   onClick={() => setIsCartOpen(false)}
                 >
-                  Checkout
+                  Checkout Now
                 </Button>
               </Link>
+              <Button 
+                className="w-full mt-2 bg-white text-primary border border-primary font-heading font-medium hover:bg-gray-50"
+                onClick={() => setIsCartOpen(false)}
+              >
+                Continue Shopping
+              </Button>
             </div>
           </motion.div>
         </motion.div>
